@@ -77,7 +77,11 @@ nav:
     - プログラミング例: document/simulator/trainee_simulator_programming.md
     - SLAM: document/simulator/trainee_slam.md
     - Navigation: document/simulator/trainee_navigation.md
-
+  - トレーニー 実機:
+    - 起動方法: document/actual_machine/trainee_launch.md
+    - ジョイコン操作: document/actual_machine/trainee_joystick_control.md
+    - SLAM: document/actual_machine/trainee_slam.md
+    - Navigation: document/actual_machine/trainee_navigation.md
 - Repository: 
   - トレーニー関連のリポジトリの説明: repository/repository_description.md
 - Study Meeting:
