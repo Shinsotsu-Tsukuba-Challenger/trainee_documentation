@@ -52,7 +52,7 @@ LiDAR用の有線と有線LANアダプターを接続しましょう
     
     * `ノートPC`
     * `Docker（ノートPC上）`
-    * `Raspi`
+    * `Raspi（ノートPCからのssh越し）`
 
 ### ネットワーク接続
 
@@ -86,7 +86,7 @@ ssh ubuntu@192.168.12.1
 ### 時刻同期
 Raspiの時刻をPCと同期させます
 
-* ノートPCからのssh越しで`Raspi`で実行
+* `Raspi`で実行
 ```
 sudo systemctl restart chrony.service
 ```
@@ -95,7 +95,7 @@ sudo systemctl restart chrony.service
 
 traineeの準備はこれでバッチリだぜ👍
 
-* ノートPCからのssh越しで`Raspi`で実行
+* `Raspi`で実行
 ```
 ros2 launch trainee_launch trainee.launch.py
 ```
