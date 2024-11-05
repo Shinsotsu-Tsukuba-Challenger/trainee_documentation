@@ -47,11 +47,18 @@ LiDAR用の有線と有線LANアダプターを接続しましょう
 
 ## システムの立ち上げ
 
+!!! Info
+    コマンドを実行する場所は**計3箇所**あるので、間違えないように気をつけてね！  
+    
+    * `ノートPC`
+    * `Docker（ノートPC上）`
+    * `Raspi`
+
 ### ネットワーク接続
 
 * LiDARと接続
 
-LiDARとPCを接続しましょう
+LiDARをPCに接続しましょう
 <center><a href="../../../images/lidar_and_pc_conection.png"><img src="../../../images/lidar_and_pc_conection.png" width="600"/></a>
 </center>
 
@@ -61,11 +68,17 @@ Raspiからは`trainee`というホットスポットが立ち上がっている
 <center><a href="../../../images/trainee_wifi_select.png"><img src="../../../images/trainee_wifi_select.png" width="600"/></a>
 </center>
 
+### LiDARのプロファイルの設定
+
+* `ノートPC`で実行
+```
+nmcli connection show livox >/dev/null 2>&1 || sudo nmcli connection add type ethernet con-name livox ifname eth0 ip4 192.168.1.100/24 gw4 192.168.1.1; sudo nmcli connection reload
+```
+
 ### ssh接続
 ノートPCからRaspiにアクセスしましょう
 
-
-* ノートPC上で実行
+* `ノートPC`で実行
 ```
 ssh ubuntu@192.168.12.1
 ```
@@ -73,14 +86,56 @@ ssh ubuntu@192.168.12.1
 ### 時刻同期
 Raspiの時刻をPCと同期させます
 
-* ssh越しでRaspi上で実行
+* ノートPCからのssh越しで`Raspi`で実行
 ```
 sudo systemctl restart chrony.service
 ```
 
-### trainee.launchの実行
+### trainee.launch.pyの実行
 
-* ノートPC上で実行
+traineeの準備はこれでバッチリだぜ👍
+
+* ノートPCからのssh越しで`Raspi`で実行
 ```
 ros2 launch trainee_launch trainee.launch.py
+```
+
+### Dockerの立ち上げ
+
+
+!!! Warning
+    Dockerのイメージが最新じゃない場合はpullしましょう！
+    
+    * `ノートPC`で実行
+    ```
+    docker pull ghcr.io/shinsotsu-tsukuba-challenger/trainee:humble
+    ```
+Hey!! Dockerは立ち上がってるかーい？  
+Dokcerを立ち上げるぜー！
+
+* `ノートPC`で実行
+
+```
+docker run --rm -it \
+           -u $(id -u):$(id -g) \
+           --privileged \
+           --net=host \
+           --ipc=host \
+           --env="DISPLAY=$DISPLAY" \
+           --mount type=bind,source=/dev/input,target=/dev/input \
+           --mount type=bind,source=/home/$USER/.ssh,target=/home/runner/.ssh \
+           --mount type=bind,source=/home/$USER/.gitconfig,target=/home/$USER/.gitconfig \
+           --mount type=bind,source=/usr/share/zoneinfo/Asia/Tokyo,target=/etc/localtime \
+           --name trainee \
+           ghcr.io/shinsotsu-tsukuba-challenger/trainee:humble
+```
+
+### DockerとRaspi間で通信できるようにする
+
+ノートPCの方も準備おっけーだぜ👍
+
+* `Docker`で実行
+
+```
+grep -q "export ROS_LOCALHOST_ONLY=" ~/.bashrc && sed -i 's/export ROS_LOCALHOST_ONLY=1/export ROS_LOCALHOST_ONLY=0/' ~/.bashrc || echo "export ROS_LOCALHOST_ONLY=0" >> ~/.bashrc && source ~/.bashrc
 ```
