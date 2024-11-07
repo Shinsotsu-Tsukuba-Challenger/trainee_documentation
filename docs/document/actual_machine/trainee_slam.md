@@ -35,6 +35,12 @@ ros2 launch trainee_launch trainee.launch.py
 * `Docker`で実行
 
 ```
+ros2 launch trainee_launch teleop_twist_joy_comfy.launch.xml
+```
+
+* `Docker`で実行
+
+```
 ros2 launch trainee_launch slam.launch.xml
 ```
 

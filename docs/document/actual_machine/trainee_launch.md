@@ -68,11 +68,26 @@ Raspiからは`trainee`というホットスポットが立ち上がっている
 <center><a href="../../../images/trainee_wifi_select.png"><img src="../../../images/trainee_wifi_select.png" width="600"/></a>
 </center>
 
-### LiDARのプロファイルの設定
+### LiDARのプロファイルの設定    
+
+!!! Info
+    **Ethernet 接続中**というステータス状態で実行することを想定しています。  
+    接続がタイムアウトしてしまっている場合は、再度LiDARをPCに接続し直しましょう。
+    
+    <center><a href="../../../images/ethernet_connection_now.png"><img src="../../../images/ethernet_connection_now.png" width="300"/></a>
+    </center>
 
 * `ノートPC`で実行
 ```
-nmcli connection show livox >/dev/null 2>&1 || sudo nmcli connection add type ethernet con-name livox ifname eth0 ip4 192.168.1.100/24 gw4 192.168.1.1; sudo nmcli connection reload
+nmcli connection show livox >/dev/null 2>&1 || sudo nmcli connection add type ethernet con-name livox ifname "$(nmcli device status | awk '/ethernet/ && /IP 設定を取得中|configuring/ {print $1}')" ip4 192.168.1.100/24 gw4 192.168.1.1; sudo nmcli connection up livox; sudo nmcli connection reload
+```
+
+* LiDARの接続確認
+
+使用しているLiDARのIP: `192.168.1.151`
+
+```
+ping 192.168.1.151 #何か定期的に返ってくればおｋ
 ```
 
 ### ssh接続
@@ -85,6 +100,14 @@ ssh ubuntu@192.168.12.1
 
 ### 時刻同期
 Raspiの時刻をPCと同期させます
+
+!!! Info
+    こちらは一回だけ実行すればおっけーです。(パッケージのインストールにインターネット接続が必要です)
+
+    * `ノートPC`で実行
+    ```
+    bash <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee_setup_scripts/refs/heads/main/time_synchronization/setup_pc.sh)
+    ```
 
 * `Raspi`で実行
 ```
