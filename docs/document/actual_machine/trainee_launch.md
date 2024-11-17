@@ -65,6 +65,12 @@ LiDARをPCに接続しましょう
 * Raspiと接続
 
 Raspiからは`trainee`というホットスポットが立ち上がっているので、接続することでRaspiとノートPCが接続されます
+
+* `ノートPC`で実行
+```
+nmcli connection show | grep -q '^trainee' && nmcli con up trainee || (nmcli dev status | awk '$2 == "wifi" {print $1}' | xargs -I{} nmcli con add type wifi ifname {} con-name trainee ssid trainee ipv4.method manual ipv4.addresses 192.168.12.12/24 ipv4.gateway 192.168.12.1 ipv4.dns 8.8.8.8 && nmcli con up trainee)
+```
+
 <center><a href="../../../images/trainee_wifi_select.png"><img src="../../../images/trainee_wifi_select.png" width="600"/></a>
 </center>
 
@@ -102,9 +108,9 @@ ssh ubuntu@192.168.12.1
 Raspiの時刻をPCと同期させます
 
 !!! Info
-    こちらは一回だけ実行すればおっけーです。(パッケージのインストールにインターネット接続が必要です)
+    一回も実行したことがない場合は、実行しましょう。
 
-    * `ノートPC`で実行
+    * `ノートPC`で実行（パッケージのインストールにインターネット接続が必要です）
     ```
     bash <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee_setup_scripts/refs/heads/main/time_synchronization/setup_pc.sh)
     ```
