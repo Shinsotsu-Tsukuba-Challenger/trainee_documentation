@@ -145,7 +145,7 @@ Dokcerを立ち上げるぜー！
 * `ノートPC`で実行
 
 ```
-docker run --rm -it \
+docker run -it \
            -u $(id -u):$(id -g) \
            --privileged \
            --net=host \
