@@ -68,7 +68,7 @@ Raspiからは`trainee`というホットスポットが立ち上がっている
 
 * `ノートPC`で実行
 ```
-nmcli connection show | grep -q '^trainee' && nmcli con up trainee || (nmcli dev status | awk '$2 == "wifi" {print $1}' | xargs -I{} nmcli con add type wifi ifname {} con-name trainee ssid trainee ipv4.method manual ipv4.addresses 192.168.12.12/24 ipv4.gateway 192.168.12.1 ipv4.dns 8.8.8.8 && nmcli con up trainee)
+nmcli connection show | grep -q '^trainee' && nmcli connection delete trainee; nmcli dev status | awk '$2 == "wifi" {print $1}' | xargs -I{} nmcli con add type wifi ifname {} con-name trainee ssid trainee ipv4.method manual ipv4.addresses 192.168.12.12/24 ipv4.gateway 192.168.12.1 ipv4.dns 8.8.8.8 && nmcli con up trainee
 ```
 
 <center><a href="../../../images/trainee_wifi_select.png"><img src="../../../images/trainee_wifi_select.png" width="600"/></a>
